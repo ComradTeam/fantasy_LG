@@ -1,0 +1,8 @@
+
+database:
+  adapter: "sqlite"
+  hostname: "212.22.93.74"
+  username: "hhgzaqvy"
+  password: "HorBD2"
+  database: "hhgzaqvy_40067"
+  port: 3306
