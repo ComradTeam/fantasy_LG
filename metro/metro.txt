@@ -1,7 +1,7 @@
-"metro"
+"fantasy"
 {
 	"base"		"helix"
-	"title"		"LG | Metro 2033"
+	"title"		"LG | Fantasy"
 	"author"	"Comrad"
 	"category"	"rp"
 	"menusystem" "1"
