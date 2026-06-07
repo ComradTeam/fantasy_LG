@@ -41,6 +41,58 @@ function PANEL:Init()
 		self:Populate()
 		self:SetActiveSubpanel("description")
 	end
+--- ТУТ МЕНЯТЬ КАРТИНКУ
+
+self.factionHeader = self.factionPanel:Add("DImage")
+self.factionHeader:SetImage("fantasylg/ui/faction_header.png")
+self.factionHeader:Dock(TOP)
+self.factionHeader:SetTall(180)
+
+self.factionName = self.factionPanel:Add("DLabel")
+self.factionName:Dock(TOP)
+self.factionName:SetFont("ixTitleFont")
+self.factionName:SetContentAlignment(5)
+
+self.prevFaction = self.factionPanel:Add("DButton")
+self.nextFaction = self.factionPanel:Add("DButton")
+
+
+function PANEL:UpdateFactionDisplay()
+    local faction =
+        self.availableFactions[self.currentFactionIndex]
+
+    self.factionName:SetText(faction.name)
+
+    self.factionDescription:SetText(
+        faction.description or ""
+    )
+
+    local models = faction:GetModels(LocalPlayer())
+
+    self.payload:Set("faction", faction.index)
+    self.payload:Set("model", math.random(#models))
+end
+
+self.currentFactionIndex =
+    self.currentFactionIndex - 1
+
+if self.currentFactionIndex < 1 then
+    self.currentFactionIndex =
+        #self.availableFactions
+end
+
+self:UpdateFactionDisplay()
+
+self.currentFactionIndex =
+    self.currentFactionIndex + 1
+
+if self.currentFactionIndex >
+    #self.availableFactions then
+
+    self.currentFactionIndex = 1
+end
+
+self:UpdateFactionDisplay()
 
 	self.factionModel = modelList:Add("ixModelPanel")
 	self.factionModel:Dock(FILL)
@@ -51,6 +103,13 @@ function PANEL:Init()
 	self.factionButtonsPanel = self.factionPanel:Add("ixCharMenuButtonList")
 	self.factionButtonsPanel:SetWide(halfWidth)
 	self.factionButtonsPanel:Dock(FILL)
+	self.factionDescription = self.factionPanel:Add("DLabel")
+	self.factionDescription:Dock(BOTTOM)
+	self.factionDescription:SetTall(180)
+	self.factionDescription:SetFont("ixMenuButtonLabelFont")
+	self.factionDescription:SetText("")
+	self.factionDescription:SetWrap(true)
+	self.factionDescription:SetContentAlignment(7)
 
 	local factionBack = self.factionPanel:Add("ixMenuButton")
 	factionBack:SetText("return")
@@ -347,19 +406,24 @@ function PANEL:Populate()
 
 		for _, v in SortedPairs(ix.faction.teams) do
 			if (ix.faction.HasWhitelist(v.index)) then
-				local button = self.factionButtonsPanel:Add("ixMenuSelectionButton")
+self.availableFactions = {}
+self.currentFactionIndex = 1
 				button:SetBackgroundColor(v.color or color_white)
 				button:SetText(L(v.name):utf8upper())
 				button:SizeToContents()
 				button:SetButtonList(self.factionButtons)
 				button.faction = v.index
 				button.OnSelected = function(panel)
-					local faction = ix.faction.indices[panel.faction]
-					local models = faction:GetModels(LocalPlayer())
+    local faction = ix.faction.indices[panel.faction]
+    local models = faction:GetModels(LocalPlayer())
 
-					self.payload:Set("faction", panel.faction)
-					self.payload:Set("model", math.random(1, #models))
-				end
+    self.payload:Set("faction", panel.faction)
+    self.payload:Set("model", math.random(1, #models))
+
+    self.factionDescription:SetText(
+        faction.description or "Описание отсутствует."
+    )
+end
 
 				if ((lastSelected and lastSelected == v.index) or (!lastSelected and v.isDefault)) then
 					button:SetSelected(true)
