@@ -1,0 +1,8 @@
+"metro"
+{
+	"base"		"helix"
+	"title"		"LG | Metro 2033"
+	"author"	"Comrad"
+	"category"	"rp"
+	"menusystem" "1"
+}
